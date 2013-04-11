@@ -92,7 +92,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-    <groupId>info.joalopes</groupId>
+    <groupId>info.joaolopes</groupId>
     <artifactId>httpwrapper</artifactId>
     <name>HttpWrapper</name>
 </project>
