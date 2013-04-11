@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,37 +19,56 @@ import java.util.Set;
  * @author Pink Donut <joaolopes at pinkdonut.net>
  */
 public class Cookie {
-    
-    public String domain;
-    public String path;
-    public Date expires;
-    public Boolean secure;
-    public Map<String, String> cookiesValues;
-    
-    public Cookie(String domain, String cookieString){
-        cookiesValues = new HashMap<>();
-        this.domain = domain;
-        this.secure = false;
-        this.path = "/";
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 10);
+    private class CookieInfo {
+        public String domain;
+        public String path;
+        public Date expires;
+        public Boolean secure;
+        public String name;
+        public String value;
         
-        this.expires = cal.getTime();
+        public CookieInfo(){
+            this.domain = "";
+            this.secure = false;
+            this.path = "/";
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 10);
+
+            this.expires = cal.getTime();
+        }
+    }
+    
+    
+    
+    
+    public List<CookieInfo> cookiesInfo;
+    
+    public Cookie(){
+        cookiesInfo = new ArrayList<>();
+    }
+    
+    public void addCookie(String cookieString){
+        
+        CookieInfo ci = new CookieInfo();
         String[] cookieData = cookieString.split("; ");
         
         for (String cookieD : cookieData) {
             String[] info = cookieD.split("=", 1);
             if(info[0].equalsIgnoreCase("path")){
-                this.path = info[1];
+                ci.path = info[1];
             }else if( info[0].equalsIgnoreCase("httponly")){
-                secure = true;
+                ci.secure = true;
+            }else if( info[0].equalsIgnoreCase("domain")){
+                ci.domain = info[1];
             }else if (info[0].equalsIgnoreCase("expires")){
                 SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd-MMM-yyyy HH:mm:ss z");
                 try {
-                    this.expires = sdf.parse(info[1]);
+                    ci.expires = sdf.parse(info[1]);
                 } catch (ParseException ex) {}
             }else{
+                ci.name = info[0];
+                ci.value = info[1];
                 cookiesValues.put(info[0], info[1]);
             }
         }
