@@ -72,12 +72,17 @@ public class CookieContainer {
         }
         
         if(!hasCookie(ci.name, ci.domain)){
+            
             cookiesInfo.add(ci);
         }else{
             cookiesInfo.set(getCookieNumber(ci.name, ci.domain), ci);
         }
         
         
+    }
+    
+    public int size(){
+        return cookiesInfo.size();
     }
     
     private int getCookieNumber(String key, String domain){
@@ -95,8 +100,18 @@ public class CookieContainer {
     @Override
     public String toString(){
         String cookies = "";
+        SimpleDateFormat df = new SimpleDateFormat("EEE, dd-MMM-yyyy HH:mm:ss z", Locale.ENGLISH);
+        df.setTimeZone(TimeZone.getTimeZone("GMT"));
         for (CookieInfo cookieInfo : cookiesInfo) {
-            cookies = cookies.concat(cookiesString(cookieInfo.domain));
+            cookies += cookieInfo.name + "=" + cookieInfo.value;
+            cookies += "; expires=" + df.format(cookieInfo.expires);
+            cookies += "; path=" + cookieInfo.path;
+            cookies += "; domain=" + cookieInfo.domain;
+            
+            if(cookieInfo.secure){
+                cookies += "; httponly";
+            }
+            cookies += "\n";
         }
         return cookies;
     }

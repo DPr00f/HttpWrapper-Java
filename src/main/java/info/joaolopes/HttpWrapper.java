@@ -173,7 +173,6 @@ public class HttpWrapper {
             }
         }
         _url = new URL(url);
-        
         urlConnection = _url.openConnection();
         if(action == Action.GET){
             ((HttpURLConnection)urlConnection).setRequestMethod("GET");
@@ -230,6 +229,7 @@ public class HttpWrapper {
         while((buffer = inStream.readLine()) != null) {
             resultLines = resultLines.concat(buffer + "\n");
         }
+        resultLines = resultLines.substring(0, resultLines.length() - 1);
        
         inStream.close();
         if(outStream != null){
